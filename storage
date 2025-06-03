@@ -73,7 +73,7 @@ def mkpath(path):
 def help(cmd=None):
     """
 List commands and display useage for commands
-Useage:
+Usage:
     storage help
     storage help <command>
     """
@@ -92,7 +92,7 @@ Commands:
 #def server(url=None):
 #    """
 #Configure the server to synchronize with
-#Useage:
+#Usage:
 #    storage server
 #    storage server <server>:<path>
 #
@@ -113,7 +113,11 @@ Commands:
 
 def git(*args):
     """
-    Manage the git repository of the file store
+Run git-related commands on the store
+Usage:
+    storage git <git command> <git args>
+Example:
+    $ storage git push
     """
     command = f'git -C {store}'
     for arg in args:
@@ -131,7 +135,7 @@ def git(*args):
 def key(key_name=None):
     """
 Configure the GPG key used to encrypt files
-Useage:
+Usage:
     storage key <gpg key>
 Example:
     $ gpg --list-secret-keys
@@ -262,52 +266,54 @@ Example:
     run(command)
 
 
-# TODO? : partial sync (push <folder>)
-def push():
-    """
-Erase the remote file store on the server and override it with the local store
-Useage:
-    storage push
-    """
-    if not os.path.exists(server_file):
-        print("You need to configure a server address first.")
-        return
-    with open(server_file) as f:
-        server, server_store = f.read().strip().split(":")
-    code, out, err = run(f"ssh {server} 'cd {server_store} && rm -r ./*'")
-    if err.strip() == "rm: cannot remove './*': No such file or directory":
-        print("Nothing to clean on the remote server")
-    elif code != 0:
-        print(code, out, err)
-    code, out, err = run(f"scp -r {store}/* {server}:{server_store}/")
-    if err.strip() == f'scp: stat local "{store}/*": No such file or directory':
-        print("Nothing to synchronize with the server")
-    elif code != 0:
-        print(code, out, err)
+# push/pull is done with git
 
-
-def pull():
-    """
-Erase the local file store on the machine and override it with the files in the remote store
-Useage:
-    storage pull
-    """
-    if not os.path.exists(server_file):
-        print("You need to configure a server address first.")
-        return
-    with open(server_file) as f:
-        server, server_store = f.read().strip().split(":")
-    code, out, err = run(f"cd {store} && rm -r ./*")
-    if code == 1 and "'./*'" in err:
-        # error message about ./* not being a file (happens when no file to remove exist)
-        print("Nothing to remove locally")
-    elif code != 0:
-        print(code, out, err)
-    code, out, err = run(f"scp -r {server}:{server_store}/* {store}/")
-    if err.strip() == f"scp: {server_store}/*: No such file or directory":
-        print("Nothing to pull from the server")
-    elif code != 0:
-        print(code, out, err)
+## TODO? : partial sync (push <folder>)
+#def push():
+#    """
+#Erase the remote file store on the server and override it with the local store
+#Usage:
+#    storage push
+#    """
+#    if not os.path.exists(server_file):
+#        print("You need to configure a server address first.")
+#        return
+#    with open(server_file) as f:
+#        server, server_store = f.read().strip().split(":")
+#    code, out, err = run(f"ssh {server} 'cd {server_store} && rm -r ./*'")
+#    if err.strip() == "rm: cannot remove './*': No such file or directory":
+#        print("Nothing to clean on the remote server")
+#    elif code != 0:
+#        print(code, out, err)
+#    code, out, err = run(f"scp -r {store}/* {server}:{server_store}/")
+#    if err.strip() == f'scp: stat local "{store}/*": No such file or directory':
+#        print("Nothing to synchronize with the server")
+#    elif code != 0:
+#        print(code, out, err)
+#
+#
+#def pull():
+#    """
+#Erase the local file store on the machine and override it with the files in the remote store
+#Usage:
+#    storage pull
+#    """
+#    if not os.path.exists(server_file):
+#        print("You need to configure a server address first.")
+#        return
+#    with open(server_file) as f:
+#        server, server_store = f.read().strip().split(":")
+#    code, out, err = run(f"cd {store} && rm -r ./*")
+#    if code == 1 and "'./*'" in err:
+#        # error message about ./* not being a file (happens when no file to remove exist)
+#        print("Nothing to remove locally")
+#    elif code != 0:
+#        print(code, out, err)
+#    code, out, err = run(f"scp -r {server}:{server_store}/* {store}/")
+#    if err.strip() == f"scp: {server_store}/*: No such file or directory":
+#        print("Nothing to pull from the server")
+#    elif code != 0:
+#        print(code, out, err)
 
 def ls(prefix=None):
     """
@@ -337,8 +343,8 @@ commands = {
     "save": save,
     "get": get,
     "rm": rm,
-    "push": push,
-    "pull": pull,
+    #"push": push,
+    #"pull": pull,
     "ls": ls,
 }
 
