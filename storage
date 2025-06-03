@@ -253,7 +253,9 @@ Example:
     2024-11-18.pdf
     """
     full_path = os.path.join(store, saved_path)
+    full_path = f"{full_path}.gpg"
     if not os.path.exists(full_path):
+        print(full_path)
         print(f"{saved_path} is not in the store")
         return
     if dest is None and not os.path.exists(os.path.basename(saved_path)):
@@ -267,9 +269,13 @@ Example:
             if not os.path.exists(name):
                 dest = name
                 break
-    command = f"gpg --decrypt --output {dest} {full_path}.gpg"
+    command = f"gpg --decrypt --output {dest} {full_path}"
     print(command)
     code, out, err = run(command)
+    # the command can fail is the user gets the passphrase wrong
+    # this is not an error
+    if code == 0:
+        print(f"Saved {saved_path} to {dest}")
     #print(code, out, err)
 
 
