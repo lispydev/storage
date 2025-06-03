@@ -289,6 +289,10 @@ Example:
     command = f"rm -r {path}"
     print(command)
     run(command)
+    code, out, err = run(f"git -C {store} add {path}")
+    #print(code)
+    #print(out)
+    #print(err)
 
 
 # push/pull is done with git
