@@ -273,7 +273,6 @@ Example:
 def rm(saved_path):
     """
 Remove a file or directory from the storage
-Will not sync with the server by default, in case the file was important
 Example:
     $ storage rm bills
     """
