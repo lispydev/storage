@@ -122,7 +122,7 @@ Example:
     command = f'git -C {store}'
     for arg in args:
         command += f' {arg}'
-    out, err, code = run(command)
+    code, out, err = run(command)
     if out:
         print(out)
     if err:
