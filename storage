@@ -21,12 +21,15 @@ def run(command, stdin=None):
 store = os.environ["HOME"] + "/.file-store"
 #print(store)
 gpg_id_file = store + "/.gpg-id"
-server_file = store + "/.server"
+# the server is configured in git remote
+#server_file = store + "/.server"
 
 
 def init_fs():
     if not os.path.exists(store):
         run(f"mkdir -p {store}")
+        run(f'git init {store}')
+        print(f'Initialized file storage at {store}')
 
 
 init_fs()
@@ -126,7 +129,7 @@ Example:
 
     if key_name is not None:
         # https://stackoverflow.com/questions/70357029/extract-gpg-fingerprint
-        command = f"gpg --list-key {key_name} | sed -n '/^\s/s/\s*//p'"
+        command = f"gpg --list-key {key_name} | sed -n '/^\\s/s/\\s*//p'"
         #print(command)
         code, out, err = run(command)
         if code != 0:
@@ -299,7 +302,7 @@ Example:
     if prefix is not None:
         path += f"/{prefix}"
         # use tree to list files, remove the last 2 lines, and remove .gpg extensions
-    code, out, err = run(f"tree {path} | tail -n +2 | sed -E 's/\.gpg(\x1B\[[0-9]+m)?( ->|$)/\1\2/g'")
+    code, out, err = run(f"tree {path} | tail -n +2 | sed -E 's/\\.gpg(\x1B<\\[[0-9]+m)?( ->|$)/\\1\\2/g'")
     if code != 0:
         print("Could not access the file storage. Does ~/.file-store exist ?")
     print(out)
