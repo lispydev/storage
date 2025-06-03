@@ -168,6 +168,8 @@ Example:
         # commit
         run(f'git -C {store} add {gpg_id_file}')
         run(f'git -C {store} commit -m "set gpg key"')
+
+        print(f"using key {key_uid.strip()}")
     else:
         # print current key used if configured
         if os.path.exists(gpg_id_file):
