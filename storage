@@ -88,27 +88,44 @@ Commands:
 """.strip())
 
 
-def server(url=None):
-    """
-Configure the server to synchronize with
-Useage:
-    storage server
-    storage server <server>:<path>
+# remote servers are managed with git remote
+#def server(url=None):
+#    """
+#Configure the server to synchronize with
+#Useage:
+#    storage server
+#    storage server <server>:<path>
+#
+#Example:
+#    $ storage server user@vps:storage
+#    $ storage server
+#    user@vps:storage
+#    """
+#    if url is not None:
+#        with open(server_file, "w") as f:
+#            f.write(url)
+#            f.write("\n")
+#    else:
+#        # print current key used if configured
+#        if os.path.exists(server_file):
+#            with open(server_file) as f:
+#                print(f.read(), end="")
 
-Example:
-    $ storage server user@vps:storage
-    $ storage server
-    user@vps:storage
+def git(*args):
     """
-    if url is not None:
-        with open(server_file, "w") as f:
-            f.write(url)
-            f.write("\n")
-    else:
-        # print current key used if configured
-        if os.path.exists(server_file):
-            with open(server_file) as f:
-                print(f.read(), end="")
+    Manage the git repository of the file store
+    """
+    command = f'git -C {store}'
+    for arg in args:
+        command += f' {arg}'
+    out, err, code = run(command)
+    if out:
+        print(out)
+    if err:
+        print(err)
+    #print(code)
+    #print(out)
+    #print(err)
 
 
 def key(key_name=None):
@@ -311,7 +328,8 @@ Example:
 
 commands = {
     "help": help,
-    "server": server,
+    #"server": server,
+    "git": git,
     "key": key,
     "save": save,
     "get": get,
