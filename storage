@@ -85,6 +85,9 @@ Usage:
         print(f"""
 Commands:
 {keys}
+
+To get help on a command:
+    storage help <command>
 """.strip())
 
 
