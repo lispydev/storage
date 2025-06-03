@@ -158,6 +158,9 @@ Example:
 
         with open(gpg_id_file, "w") as f:
             f.write(key_uid)
+        # commit
+        run(f'git -C {store} add {gpg_id_file}')
+        run(f'git -C {store} commit -m "set gpg key"')
     else:
         # print current key used if configured
         if os.path.exists(gpg_id_file):
