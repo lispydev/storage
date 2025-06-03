@@ -253,6 +253,9 @@ Example:
     2024-11-18.pdf
     """
     full_path = os.path.join(store, saved_path)
+    if not os.path.exists(full_path):
+        print(f"{saved_path} is not in the store")
+        return
     if dest is None and not os.path.exists(os.path.basename(saved_path)):
         dest = os.path.basename(saved_path)
     if dest is None:
