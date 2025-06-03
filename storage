@@ -204,14 +204,36 @@ Example:
         print("You need to configure a GPG key to use for encryption first.")
         return
     with open(gpg_id_file) as f:
-        fingerprint = f.read().strip()
+        gpg_uid = f.read().strip()
+        #fingerprint = f.read().strip()
     if not mkpath(storage_path):
         #print("Error creating path in the store")
         return
     dest = os.path.join(store, storage_path) + ".gpg"
-    code, out, err = run(f"gpg --encrypt --recipient {fingerprint} --output {dest} {source}")
+    code, out, err = run(f'gpg --encrypt --recipient "{gpg_uid}" --output {dest} {source}')
     if code == 0:
         print(f"Saved the file to {dest}")
+    else:
+        print("Error while encrypting the file")
+        # decomment these lines if you ever have to debug
+        #print(code)
+        #print(out)
+        #print(err)
+        return
+
+    # commit
+    code, out, err = run(f"git -C {store} add {dest}")
+    #print(code)
+    #print(out)
+    #print(err)
+    code, out, err = run(f"git -C {store} commit -m 'add {storage_path}'")
+    #print(code)
+    #print(out)
+    #print(err)
+    if code != 0:
+        print("Error while saving the file")
+        return
+
 
     # TODO: mkpath on server (assume everything works, warn if sync failed)
     # TODO: save on server with scp <store>/storage_path.gpg <server>/storage_path.gpg
