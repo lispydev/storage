@@ -4,7 +4,7 @@ A pass-like encrypted and remotely synchronized file storage
 
 ## Install
 
-![Download the storage script](https://raw.githubusercontent.com/lispydev/storage/refs/heads/master/storage), move it to `/usr/local/bin/storage` and mark it as executable with `chmod +x /usr/local/bin/storage`
+![Download the storage script](https://github.com/lispydev/storage/releases), move it to `/usr/local/bin/storage` and mark it as executable with `chmod +x /usr/local/bin/storage`
 
 You will need Python installed to run `storage`.
 
