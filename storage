@@ -291,6 +291,7 @@ Example:
     print(command)
     run(command)
     code, out, err = run(f"git -C {store} add {path}")
+    code, out, err = run(f"git -C {store} commit -m 'remove {saved_path}'")
     #print(code)
     #print(out)
     #print(err)
