@@ -129,17 +129,18 @@ Example:
 
     if key_name is not None:
         # https://stackoverflow.com/questions/70357029/extract-gpg-fingerprint
-        command = f"gpg --list-key {key_name} | sed -n '/^\\s/s/\\s*//p'"
+        command = f'gpg --list-key --with-colons {key_name} | grep ^uid | cut -d : -f 10'
+        #command = f"gpg --list-key {key_name} | sed -n '/^\\s/s/\\s*//p'"
         #print(command)
         code, out, err = run(command)
         if code != 0:
             print(f"error getting the key with gpg --list-key {key_name}")
             sys.exit(1)
 
-        key_fingerprint = out
+        key_uid = out
 
         with open(gpg_id_file, "w") as f:
-            f.write(key_fingerprint)
+            f.write(key_uid)
     else:
         # print current key used if configured
         if os.path.exists(gpg_id_file):
