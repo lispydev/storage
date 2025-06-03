@@ -2,6 +2,13 @@
 
 A pass-like encrypted and remotely synchronized file storage
 
+## Install
+
+![Download the storage script](https://github.com/b4994cd9-45f9-4b41-b841-68dd4919621e), move it to `/usr/local/bin/storage` and mark it as executable with `chmod +x /usr/local/bin/storage`
+
+You will need Python installed to run `storage`.
+
+
 ## Basic useage
 
 `storage` uses GPG to encrypt stored files. To define the GPG secret key to use, run:
