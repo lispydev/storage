@@ -16,6 +16,10 @@ When creating a GPG key, you should always use a passphrase to prevent someone w
 
 ## Storing and retrieving files
 
+
+Files are stored in a git repository at `~/.file-store`.
+
+
 The following will save `bill.pdf` as `bills/<current-date>.pdf.gpg` under the storage file store.
 ```
 storage save bill.pdf bills/$(date -I).pdf
@@ -31,24 +35,45 @@ If you do not need it anymore:
 storage rm bills  # rm -r ~/.file-store/bills(.gpg)
 ```
 
-
-## Server synchronization with SSH
-
-You can also configure a remote server with SSH access to synchronize your files before any accident:
+If you delete important files, you can still recover them with git:
 ```
-storage server vps:file-store  # must be a valid scp url (<ssh server>:<path>)
-storage server  # display the configured server
+# check the current branch
+storage git branch
+storage git log
+# go back to the previous commit
+storage git checkout 1e570353ecac0768ff92533f4f298870f7de0881
+storage get bills
+# go back to the main branch
+storage git checkout master
+```
+
+
+
+## Server synchronization with Git and SSH
+
+You can configure a remote server with SSH access to synchronize your files before any accident:
+```
+# file-store must be a valid git repository
+storage git remote add origin user@server:file-store
+storage git remote -v # display the configured server(s)
+```
+
+To create a git repository on your server:
+```
+ssh user@server
+git init --bare file-store
 ```
 
 To synchronize:
 ```
-storage pull  # override the local storage with the server:
+storage git pull  # fetch updates before commiting new things
 ```
 ```
-storage push  # erase the remote storage and replace it with the local files
+storage git push  # push new updates to the server
 ```
 
-`storage` does not feature versioning like pass, because manipulating non-textual files with git would lead to a larger and larger git history over time. Instead, you can use the server and other synchronized machines as "delete-safe" backups for when you accidentally remove an important file.
+
+If you want to have more backups, you can configure a mirror repository on an other server. However, using public servers like Github is dangerous for your privacy if your documents must stay confidential.
 
 
 ## Export encrypted files and GPG keys
@@ -56,9 +81,8 @@ storage push  # erase the remote storage and replace it with the local files
 In order to synchronize a new machine with your `storage` server, you need to:
 - install gpg, ssh and storage
 - configure ssh keys for prompt-less connections
-- configure the `storage` server url
+- clone the repository into `~/.file-store` with `git clone user@server:file-store ~/.file-store`
 - import the GPG public and secret keys on the new machine
-- configure the `secret` key
 
 To export your GPG keys:
 ```
